@@ -1,3 +1,4 @@
+#import "LauncherPreferences.h"
 #import "SurfaceViewController.h"
 
 #include "jni.h"
