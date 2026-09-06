@@ -31,7 +31,7 @@ jobs:
           ls -lah ./
 
       - name: Get dependencies
-        run: brew install ldid make temurin@8
+        run: brew install ldid make temurin@8 vulkan-headers
           
       - name: Checkout repository
         uses: actions/checkout@main
