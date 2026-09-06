@@ -19,6 +19,7 @@
         }.mutableCopy,
         @"video": @{ // Video & Audio
             @"renderer": @"auto",
+            @"mobilegl_enable_vulkan": @NO,
             @"resolution": @(100),
             @"max_framerate": @YES,
             @"performance_hud": @NO,

@@ -51,6 +51,7 @@ int pojavInit(BOOL useStackQueue) {
 int pojavInitOpenGL() {
     NSString *renderer = NSProcessInfo.processInfo.environment[@"POJAV_RENDERER"];
     BOOL isAuto = [renderer isEqualToString:@"auto"];
+    BOOL mobileGLVulkan = getPrefBool(@"video.mobilegl_enable_vulkan");
     if (isAuto || [renderer isEqualToString:@ RENDERER_NAME_GL4ES]) {
         // At this point, if renderer is still auto (unspecified major version), pick gl4es
         renderer = @ RENDERER_NAME_GL4ES;
@@ -59,6 +60,9 @@ int pojavInitOpenGL() {
     } else if ([renderer isEqualToString:@ RENDERER_NAME_MOBILEGLUES]) {
         renderer = @ RENDERER_NAME_MOBILEGLUES;
         setenv("POJAV_RENDERER", renderer.UTF8String, 1);
+        set_gl_bridge_tbl();
+    } else if ([renderer isEqualToString:@ RENDERER_NAME_MOBILEGL]) {
+        setenv("MOBILEGL_BACKEND_TYPE", mobileGLVulkan ? "DirectVulkan" : "DirectGLES", 1);
         set_gl_bridge_tbl();
     } else if ([renderer isEqualToString:@ RENDERER_NAME_MTL_ANGLE]) {
         set_gl_bridge_tbl();

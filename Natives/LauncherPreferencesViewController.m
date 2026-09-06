@@ -164,6 +164,12 @@
               @"pickKeys": self.rendererKeys,
               @"pickList": self.rendererList
             },
+            @{@"key": @"mobilegl_enable_vulkan",
+              @"hasDetail": @YES,
+              @"icon": @"cpu",
+              @"type": self.typeSwitch,
+              @"enableCondition": whenNotInGame
+            },
             @{@"key": @"resolution",
               @"hasDetail": @YES,
               @"icon": @"viewfinder",
