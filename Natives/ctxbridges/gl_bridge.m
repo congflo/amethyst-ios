@@ -13,8 +13,8 @@ static egl_library handle;
 void dlsym_EGL() {
     NSString *renderer = NSProcessInfo.processInfo.environment[@"POJAV_RENDERER"];
     BOOL isMobileGL = [renderer isEqualToString:@ RENDERER_NAME_MOBILEGL];
-    NSString *eglLib = isMobileGL ? RENDERER_NAME_MOBILEGL : RENDERER_NAME_MTL_ANGLE;
-    void* dl_handle = dlopen("@rpath/%@", eglLib, RTLD_GLOBAL);
+    NSString *eglLib = [NSString stringWithFormat:@"@rpath/%s", isMobileGL ? RENDERER_NAME_MOBILEGL : RENDERER_NAME_MTL_ANGLE];
+    void* dl_handle = dlopen(eglLib, RTLD_GLOBAL);
     NSCAssert(dl_handle, @(dlerror()));
     handle.eglBindAPI = dlsym(dl_handle, "eglBindAPI");
     handle.eglChooseConfig = dlsym(dl_handle, "eglChooseConfig");
