@@ -10,12 +10,14 @@
 static EGLDisplay g_EglDisplay;
 static egl_library handle;
 
-void dlsym_EGL() {
+static bool dlsym_EGL() {
     NSString *renderer = NSProcessInfo.processInfo.environment[@"POJAV_RENDERER"];
     BOOL isMobileGL = [renderer isEqualToString:@ RENDERER_NAME_MOBILEGL];
     NSString *eglLib = [NSString stringWithFormat:@"@rpath/%s", isMobileGL ? RENDERER_NAME_MOBILEGL : RENDERER_NAME_MTL_ANGLE];
     void* dl_handle = dlopen(eglLib.UTF8String, RTLD_GLOBAL);
-    NSCAssert(dl_handle, @(dlerror()));
+    if (!dl_handle) return false;
+
+    memset(&handle, 0, sizeof(handle));
     handle.eglBindAPI = dlsym(dl_handle, "eglBindAPI");
     handle.eglChooseConfig = dlsym(dl_handle, "eglChooseConfig");
     handle.eglCreateContext = dlsym(dl_handle, "eglCreateContext");
@@ -34,10 +36,16 @@ void dlsym_EGL() {
     handle.eglSwapInterval = dlsym(dl_handle, "eglSwapInterval");
     handle.eglTerminate = dlsym(dl_handle, "eglTerminate");
     handle.eglGetCurrentSurface = dlsym(dl_handle, "eglGetCurrentSurface");
+
+    return handle.eglBindAPI && handle.eglChooseConfig && handle.eglCreateContext &&
+        handle.eglCreateWindowSurface && handle.eglDestroyContext && handle.eglDestroySurface &&
+        handle.eglGetConfigAttrib && handle.eglGetDisplay && handle.eglGetError &&
+        handle.eglInitialize && handle.eglMakeCurrent && handle.eglSwapBuffers &&
+        handle.eglReleaseThread && handle.eglSwapInterval && handle.eglTerminate;
 }
 
 static bool gl_init() {
-    dlsym_EGL();
+    if (!dlsym_EGL()) return false;
 
     g_EglDisplay = handle.eglGetDisplay(EGL_DEFAULT_DISPLAY);
     if (g_EglDisplay == EGL_NO_DISPLAY) {
