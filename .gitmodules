@@ -14,4 +14,4 @@
 	branch = main
 [submodule "Natives/external/MobileGL"]
 	path = Natives/external/MobileGL
-	url = https://github.com/MobileGL-Dev/MobileGL
+	url = https://github.com/Ynnyny/MobileGL-fix.git
